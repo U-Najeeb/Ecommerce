@@ -1,20 +1,22 @@
 import mongoose, { Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new Schema({
   fName: {
     type: String,
-    required: true,
+    required: [true, "First name is required"],
     maxlength: 50,
   },
   lName: {
     type: String,
-    required: true,
+    required: [true, "Last name is required"],
     maxlength: 50,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Email is required"],
     unique: true,
+    lowercase: true,
     validate: {
       validator: (value: string) => /\S+@\S+\.\S+/.test(value),
       message: "Invalid email address",
@@ -22,7 +24,7 @@ const userSchema = new Schema({
   },
   address: {
     type: String,
-    required: true,
+    required: [true, "Please provide your address"],
     minlength: 10,
   },
   role: {
@@ -38,9 +40,18 @@ const userSchema = new Schema({
   ],
   password: {
     type: String,
-    required: true,
+    required: [true, "Password is required"],
     min: 6,
+    select : false
   },
+});
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+
+  next();
 });
 
 const User = mongoose.model("User", userSchema);
