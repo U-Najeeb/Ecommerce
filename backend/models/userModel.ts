@@ -1,7 +1,26 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new Schema({
+enum UserRole {
+  Consumer = "consumer",
+  Seller = "seller",
+}
+
+interface UserDocument extends Document {
+  fName: string;
+  lName: string;
+  email: string;
+  address: string;
+  role: UserRole;
+  products: mongoose.Types.ObjectId[];
+  password: string;
+  checkCorrectPassword(
+    passwordFromBody: string,
+    passwordFromDB: string
+  ): Promise<boolean>;
+}
+
+const userSchema = new Schema<UserDocument>({
   fName: {
     type: String,
     required: [true, "First name is required"],
@@ -29,8 +48,8 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ["consumer", "seller"],
-    default: "consumer",
+    enum: UserRole,
+    default: UserRole.Consumer,
   },
   products: [
     {
@@ -42,7 +61,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Password is required"],
     min: 6,
-    select : false
+    select: false,
   },
 });
 
@@ -54,6 +73,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+userSchema.methods.checkCorrectPassword = async function (
+  passwordFromBody: string,
+  passwordFromDB: string
+): Promise<boolean> {
+  return bcrypt.compare(passwordFromBody, passwordFromDB);
+};
 const User = mongoose.model("User", userSchema);
 
 export default User;
