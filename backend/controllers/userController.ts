@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import User from "../models/userModel";
 
+
+//@Route            GET api/v1/users/
+//@Description      Get All Users
 const getAllUsers = catchAsync(
   async (_req: Request, res: Response, _next: NextFunction) => {
     const users = await User.find();
@@ -18,6 +21,9 @@ const getAllUsers = catchAsync(
   }
 );
 
+
+//@Route            GET api/v1/users/:id
+//@Description      Get User By ID
 const getUserById = catchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const _id = req.params.id;
@@ -35,6 +41,9 @@ const getUserById = catchAsync(
   }
 );
 
+
+//@Route            PATCH api/v1/users/:id
+//@Description      Update User By ID
 const updateUser = catchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     interface Body {
@@ -64,6 +73,9 @@ const updateUser = catchAsync(
   }
 );
 
+
+//@Route            DELETE api/v1/users/:id
+//@Description      Delete User By ID
 const deleteUser = catchAsync(
     async (req: Request, res: Response, _next: NextFunction) => {
   

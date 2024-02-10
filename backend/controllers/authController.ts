@@ -15,7 +15,7 @@ const signingFunc = (payload: string | object): string | undefined => {
   return jwt.sign(tokenPayload, process.env.JWT_SECRET);
 };
 
-//@Route            api/v1/auth/login
+//@Route            POST api/v1/auth/login
 //@Description      Logging The User In
 const signUp = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
@@ -45,7 +45,7 @@ const signUp = catchAsync(
   }
 );
 
-//@Route            api/v1/auth/login
+//@Route            POST api/v1/auth/login
 //@Description      Logging The User In
 const login = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
