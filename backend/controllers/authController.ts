@@ -3,12 +3,16 @@ import catchAsync from "../utils/catchAsync";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
+import { ObjectId } from "mongoose";
 
-const signingFunc = (payload: string | object) => {
+const signingFunc = (payload: string | object): string | undefined => {
   if (!process.env.JWT_SECRET) {
     return undefined;
   }
-  return jwt.sign(payload, process.env.JWT_SECRET);
+
+  const tokenPayload = typeof payload === 'string' ? payload : payload.toString();
+
+  return jwt.sign(tokenPayload, process.env.JWT_SECRET);
 };
 
 //@Route            api/v1/auth/login
@@ -25,8 +29,7 @@ const signUp = catchAsync(
     const body: Body = req.body;
 
     const newUser = await User.create(body);
-
-    const token = signingFunc(newUser._id);
+    const token = signingFunc(newUser._id as string | object);
 
     res.cookie("jwt", token, {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
