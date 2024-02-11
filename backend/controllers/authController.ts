@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
 
@@ -9,7 +9,8 @@ const signingFunc = (payload: string | object): string | undefined => {
     return undefined;
   }
 
-  const tokenPayload = typeof payload === 'string' ? payload : payload.toString();
+  const tokenPayload =
+    typeof payload === "string" ? payload : payload.toString();
 
   return jwt.sign(tokenPayload, process.env.JWT_SECRET);
 };
@@ -31,10 +32,10 @@ const signUp = catchAsync(
     const token = signingFunc(newUser._id as string | object);
 
     res.cookie("jwt", token, {
-      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-      secure: false,
-      httpOnly: false,
-    });
+      expires : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      secure : true,
+      httpOnly : false
+    })
     res.status(201).json({
       message: "Registered Succesfully",
       newUser,
@@ -64,10 +65,10 @@ const login = catchAsync(
     const token = signingFunc(user._id);
 
     res.cookie("jwt", token, {
-      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-      secure: true,
-      httpOnly: false,
-    });
+      expires : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      secure : true,
+      httpOnly : false
+    })
 
     res.status(200).json({
       message: "Logged in successfully",
@@ -77,4 +78,36 @@ const login = catchAsync(
   }
 );
 
-export { login, signUp };
+interface CustomRequest extends Request {
+  user?: JwtPayload;
+}
+
+const validateToken = catchAsync(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const token = req.cookies.jwt;
+
+    console.log(token)
+    if (!token) {
+      return res.status(401).json({
+        message: "Please login first",
+      });
+    }
+    
+    if (!process.env.JWT_SECRET) {
+      return next(new AppError("JWT SECRET OR TOKEN NOT FOUND", 400));
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+      req.user = decoded; // Attach the decoded payload to the request object
+      next(); // Proceed to the next middleware
+    } catch (err) {
+      return res.status(401).json({
+        message: "Invalid token",
+      });
+    }
+  }
+);
+
+
+export { login, signUp, validateToken };
