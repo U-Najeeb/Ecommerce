@@ -27,4 +27,4 @@ The MERN eCommerce App is a full-stack web application built with the MERN (Mong
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/U-Najeeb/your-repository.git
+   git clone https://github.com/U-Najeeb/Ecommerce.git
