@@ -18,7 +18,7 @@ const SignUp = () => {
     mutationFn: signupFn,
     onSuccess: (data) => {
       setUserData(data?.data);
-      // navigate("/homepage");
+      navigate("/homepage");
     },
   });
 
@@ -33,7 +33,7 @@ const SignUp = () => {
     };
     mutate(signupData);
   };
-  console.log(userData)
+  
   return (
     <div className="flex justify-center h-screen items-center border-2 max-sm:p-1">
       <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-2">
