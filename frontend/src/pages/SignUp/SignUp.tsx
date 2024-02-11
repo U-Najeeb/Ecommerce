@@ -8,7 +8,7 @@ import { useUserContext } from "../../context/userContext";
 import {SignUpTypes } from "../../types/User";
 
 const SignUp = () => {
-  const { userData,setUserData } = useUserContext();
+  const {setUserData } = useUserContext();
   const navigate = useNavigate();
 
   const signupFn = (signupData: SignUpTypes) => {
@@ -33,7 +33,7 @@ const SignUp = () => {
     };
     mutate(signupData);
   };
-  
+
   return (
     <div className="flex justify-center h-screen items-center border-2 max-sm:p-1">
       <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-2">
