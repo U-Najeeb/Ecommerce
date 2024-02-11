@@ -1,12 +1,14 @@
-import MainNavigator from "./navigation/MainNavigator"
+import { UserContextProvider } from "./context/userContext";
+import MainNavigator from "./navigation/MainNavigator";
 
 function App() {
-
   return (
     <>
-    <MainNavigator/>
+      <UserContextProvider>
+        <MainNavigator />
+      </UserContextProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

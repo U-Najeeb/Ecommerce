@@ -1,9 +1,189 @@
-import React from 'react'
+import { Box, Button, TextField } from "@mui/material";
+import logo from "../../assets/logo.png";
+import { useMutation } from "react-query";
+import { useAxios } from "../../hooks/useAxios";
+import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../context/userContext";
+import {SignUpTypes } from "../../types/User";
 
 const SignUp = () => {
-  return (
-    <div>SignUp</div>
-  )
-}
+  const { userData,setUserData } = useUserContext();
+  const navigate = useNavigate();
 
-export default SignUp
+  const signupFn = (signupData: SignUpTypes) => {
+    return useAxios.post("/auth/signup", signupData);
+  };
+  const { mutate, status } = useMutation({
+    mutationFn: signupFn,
+    onSuccess: (data) => {
+      setUserData(data?.data);
+      // navigate("/homepage");
+    },
+  });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const signupData: SignUpTypes = {
+      fName :(e.currentTarget as HTMLFormElement).fName.value,
+      lName :(e.currentTarget as HTMLFormElement).lName.value,
+      email: (e.currentTarget as HTMLFormElement).email.value,
+      password: (e.currentTarget as HTMLFormElement).password.value,
+      address :(e.currentTarget as HTMLFormElement).address.value,
+    };
+    mutate(signupData);
+  };
+  console.log(userData)
+  return (
+    <div className="flex justify-center h-screen items-center border-2 max-sm:p-1">
+      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-2">
+        <div className="w-fit ">
+          <img src={logo} alt="logo" />
+        </div>
+        <form
+          className="flex justify-center flex-col gap-8 w-full h-fit items-center max-sm:gap-6"
+          onSubmit={handleSubmit}
+        >
+          <Box sx={{ display: "flex", gap: "2rem" }}>
+            <TextField
+              id="fName"
+              label="First Name"
+              variant="outlined"
+              name="fName"
+              sx={{
+                width: "100%",
+                //   bgcolor: "#E3E3E3",
+                borderRadius: "10px",
+                outlineColor: "transparent",
+                borderColor: "none",
+              }}
+              color="primary"
+              focused
+              required
+            />
+            <TextField
+              id="lName"
+              label="Last Name"
+              name="lName"
+              variant="outlined"
+              sx={{
+                width: "100%",
+                //   bgcolor: "#E3E3E3",
+                borderRadius: "10px",
+                outline: "none",
+                border: "none",
+              }}
+              focused
+              required
+            />
+          </Box>
+          <Box sx={{width : "100%"}}>
+            <TextField
+              fullWidth
+              id="email"
+              label="Email"
+              variant="outlined"
+              name="email"
+              sx={{
+                width: "100%",
+                //   bgcolor: "#E3E3E3",
+                borderRadius: "10px",
+                outlineColor: "transparent",
+                borderColor: "none",
+              }}
+              color="primary"
+              focused
+              required
+            />
+          </Box>
+          <Box sx={{ display: "flex", gap: "2rem" }}>
+            <TextField
+              id="password"
+              label="Password"
+              variant="outlined"
+              name="password"
+              type="password"
+              sx={{
+                width: "100%",
+                //   bgcolor: "#E3E3E3",
+                borderRadius: "10px",
+                outlineColor: "transparent",
+                borderColor: "none",
+              }}
+              color="primary"
+              focused
+              required
+            />
+            <TextField
+              id="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              variant="outlined"
+              sx={{
+                width: "100%",
+                //   bgcolor: "#E3E3E3",
+                borderRadius: "10px",
+                outline: "none",
+                border: "none",
+              }}
+              focused
+              required
+            />
+          </Box>
+          <Box sx={{width : "100%"}}>
+            <TextField
+              fullWidth
+              id="address"
+              label="Address"
+              variant="outlined"
+              name="address"
+              sx={{
+                width: "100%",
+                //   bgcolor: "#E3E3E3",
+                borderRadius: "10px",
+                outlineColor: "transparent",
+                borderColor: "none",
+              }}
+              color="primary"
+              focused
+              required
+            />
+          </Box>
+          <div className="w-fit">
+            <Button
+              type="submit"
+              variant="contained"
+              color={status === "error" ? "error" : "primary"}
+              sx={{ width: "164px", height: "45px" }}
+            >
+              SIGNUP
+            </Button>
+          </div>
+        </form>
+        <div>
+          <h3 className="text-text-grey text-xs ">Already A GoCarter?</h3>
+        </div>
+        <div>
+          <Button
+            variant="outlined"
+            color="primary"
+            sx={{
+              width: "10rem",
+              height: "45px",
+              fontSize: "12px",
+              fontWeight: "600",
+            }}
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Login
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SignUp;

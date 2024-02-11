@@ -3,7 +3,6 @@ import catchAsync from "../utils/catchAsync";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
-import { ObjectId } from "mongoose";
 
 const signingFunc = (payload: string | object): string | undefined => {
   if (!process.env.JWT_SECRET) {
@@ -36,7 +35,6 @@ const signUp = catchAsync(
       secure: false,
       httpOnly: false,
     });
-
     res.status(201).json({
       message: "Registered Succesfully",
       newUser,
