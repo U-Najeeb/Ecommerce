@@ -33,8 +33,8 @@ const Login = () => {
 
   return (
     <div className="flex justify-center h-screen items-center border-2">
-      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-9  h-5/6 items-center rounded-xl p-8 ">
-        <div className="w-fit">
+      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-9 h-5/6 items-center rounded-xl p-8 sm:w-4/4 xl:w-1/4 ">
+        <div className="w-fit max-sm:w-9/12">
           <img src={logo} alt="logo" />
         </div>
         <form

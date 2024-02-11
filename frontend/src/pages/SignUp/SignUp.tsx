@@ -5,10 +5,10 @@ import { useAxios } from "../../hooks/useAxios";
 import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
-import {SignUpTypes } from "../../types/User";
+import { SignUpTypes } from "../../types/User";
 
 const SignUp = () => {
-  const {setUserData } = useUserContext();
+  const { setUserData } = useUserContext();
   const navigate = useNavigate();
 
   const signupFn = (signupData: SignUpTypes) => {
@@ -25,26 +25,26 @@ const SignUp = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const signupData: SignUpTypes = {
-      fName :(e.currentTarget as HTMLFormElement).fName.value,
-      lName :(e.currentTarget as HTMLFormElement).lName.value,
+      fName: (e.currentTarget as HTMLFormElement).fName.value,
+      lName: (e.currentTarget as HTMLFormElement).lName.value,
       email: (e.currentTarget as HTMLFormElement).email.value,
       password: (e.currentTarget as HTMLFormElement).password.value,
-      address :(e.currentTarget as HTMLFormElement).address.value,
+      address: (e.currentTarget as HTMLFormElement).address.value,
     };
     mutate(signupData);
   };
 
   return (
-    <div className="flex justify-center h-screen items-center border-2 max-sm:p-1">
-      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-2">
-        <div className="w-fit ">
+    <div className="flex justify-center h-screen items-center border-2 max-sm:p-1 overflow-y-auto ">
+      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-3 max-sm:w-full max-sm:gap-5 max-sm:mt-20">
+        <div className="w-fit max-sm:w-9/12 max-sm:flex max-sm:justify-center ">
           <img src={logo} alt="logo" />
         </div>
         <form
           className="flex justify-center flex-col gap-8 w-full h-fit items-center max-sm:gap-6"
           onSubmit={handleSubmit}
         >
-          <Box sx={{ display: "flex", gap: "2rem" }}>
+          <div className="flex gap-8 max-sm:flex-col  w-full">
             <TextField
               id="fName"
               label="First Name"
@@ -52,7 +52,6 @@ const SignUp = () => {
               name="fName"
               sx={{
                 width: "100%",
-                //   bgcolor: "#E3E3E3",
                 borderRadius: "10px",
                 outlineColor: "transparent",
                 borderColor: "none",
@@ -76,8 +75,8 @@ const SignUp = () => {
               focused
               required
             />
-          </Box>
-          <Box sx={{width : "100%"}}>
+          </div>
+          <Box sx={{ width: "100%" }}>
             <TextField
               fullWidth
               id="email"
@@ -96,7 +95,7 @@ const SignUp = () => {
               required
             />
           </Box>
-          <Box sx={{ display: "flex", gap: "2rem" }}>
+          <div className="flex gap-8 w-full max-sm:gap-4">
             <TextField
               id="password"
               label="Password"
@@ -130,8 +129,8 @@ const SignUp = () => {
               focused
               required
             />
-          </Box>
-          <Box sx={{width : "100%"}}>
+          </div>
+          <Box sx={{ width: "100%" }}>
             <TextField
               fullWidth
               id="address"
