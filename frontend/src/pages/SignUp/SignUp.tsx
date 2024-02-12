@@ -2,7 +2,7 @@ import { Box, Button, TextField } from "@mui/material";
 import logo from "../../assets/logo.png";
 import { useMutation } from "react-query";
 import { useAxios } from "../../hooks/useAxios";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
 import { SignUpTypes } from "../../types/User";
@@ -21,6 +21,17 @@ const SignUp = () => {
       navigate("/homepage");
     },
   });
+
+  useEffect(()=> {
+    const autoLogin = async () =>{
+      const response = await useAxios.post("/auth/validate-token", {},)
+
+      if(response.status === 200){
+        navigate("/homepage")
+      }
+    }
+    autoLogin()
+  })
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

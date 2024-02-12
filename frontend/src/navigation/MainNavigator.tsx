@@ -6,7 +6,7 @@ import HomePage from "../pages/HomePage/HomePage";
 const MainNavigator = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route index element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/homepage" element={<HomePage />} />
     </Routes>

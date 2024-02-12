@@ -3,11 +3,11 @@ import catchAsync from "../utils/catchAsync";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
-
 import { type CookieOptions } from "express";
-import { ObjectId } from "mongoose";
+import { decode } from "punycode";
 
-const signingFunc = (payload :  string): string | undefined => {
+
+const signingFunc = (payload :  string | object ): string | undefined => {
   if (!process.env.JWT_SECRET) {
     return undefined;
   }
@@ -30,7 +30,7 @@ const signUp = catchAsync(
 
     const newUser = await User.create(body);
     console.log(newUser._id)
-    const token = signingFunc(newUser._id as string);
+    const token = signingFunc(newUser._id as string | object);
 
     res.cookie("jwt", token, {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
@@ -62,8 +62,8 @@ const login = catchAsync(
     if (!user || !(await user.checkCorrectPassword(password, user.password))) {
       return next(new AppError("Incorrect email or password", 401));
     }
-    console.log(user._id)
-    const token = signingFunc(user._id as string);
+
+    const token = signingFunc(user._id as string | object);
 
     const cookie_options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
@@ -89,21 +89,26 @@ interface CustomRequest extends Request {
 const validateToken = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
-
+    
     if (!token) {
       return res.status(401).json({
         message: "Please login first",
       });
     }
-
     if (!process.env.JWT_SECRET) {
       return next(new AppError("JWT SECRET OR TOKEN NOT FOUND", 400));
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-      req.user = decoded;
-      next();
+      jwt.verify(token, process.env.JWT_SECRET, (err: any) => {
+        if (err) {
+          return res.status(401).json({
+            message: "Invalid token",
+          });
+        } else {
+          return res.sendStatus(200);
+        }
+      });
     } catch (err) {
       return res.status(401).json({
         message: "Invalid token",

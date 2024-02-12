@@ -10,7 +10,6 @@ import cookieParser from "cookie-parser";
 
 configDotenv();
 const app = express(); // Creating a server
-app.use(cookieParser());
 connectToDb(); // Connecting to database
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,6 +18,7 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(cookieParser());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 
