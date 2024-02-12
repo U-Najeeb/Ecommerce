@@ -6,9 +6,9 @@ import HomePage from "../pages/HomePage/HomePage";
 const MainNavigator = () => {
   return (
     <Routes>
-      <Route index element={<Login />} />
+      <Route path={"/login"} element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/homepage" element={<HomePage />} />
+      <Route index element={<HomePage />} />
     </Routes>
   );
 };

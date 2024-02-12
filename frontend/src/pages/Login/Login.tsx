@@ -28,7 +28,7 @@ const Login = () => {
       const response = await useAxios.post("/auth/validate-token", {},)
 
       if(response.status === 200){
-        navigate("/homepage")
+        navigate("/")
       }
     }
     autoLogin()

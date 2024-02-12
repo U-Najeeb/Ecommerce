@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 const productSchema = new Schema({
-  productName: {
+  title: {
     type: String,
     required: true,
   },
@@ -14,7 +14,11 @@ const productSchema = new Schema({
     required: true,
     min: 0,
   },
-  quantity: {
+  rating: {
+    type: Number,
+    default : 1
+  },
+  stock: {
     type: Number,
     required: true,
     min: 0,
@@ -24,14 +28,18 @@ const productSchema = new Schema({
     ref: "User",
     required: true,
   },
-  productImage: {
-    type: String,
+  images: {
+    type: Array,
     required: true,
   },
   category: {
     type: String,
     required: true,
   },
+  thumbnail:{
+    type : String,
+    default : null
+  }
 });
 
 const Product = mongoose.model("Product", productSchema);

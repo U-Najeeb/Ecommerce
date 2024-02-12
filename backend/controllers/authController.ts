@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
 import { type CookieOptions } from "express";
-import { decode } from "punycode";
 
 
 const signingFunc = (payload :  string | object ): string | undefined => {
@@ -98,9 +97,8 @@ const validateToken = catchAsync(
     if (!process.env.JWT_SECRET) {
       return next(new AppError("JWT SECRET OR TOKEN NOT FOUND", 400));
     }
-
     try {
-      jwt.verify(token, process.env.JWT_SECRET, (err: any) => {
+      jwt.verify(token, process.env.JWT_SECRET, (err : Error | null) => {
         if (err) {
           return res.status(401).json({
             message: "Invalid token",
