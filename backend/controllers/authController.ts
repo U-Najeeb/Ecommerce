@@ -86,7 +86,6 @@ const validateToken = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
 
-    console.log(token)
     if (!token) {
       return res.status(401).json({
         message: "Please login first",
@@ -99,8 +98,8 @@ const validateToken = catchAsync(
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-      req.user = decoded; // Attach the decoded payload to the request object
-      next(); // Proceed to the next middleware
+      req.user = decoded;
+      next(); 
     } catch (err) {
       return res.status(401).json({
         message: "Invalid token",
