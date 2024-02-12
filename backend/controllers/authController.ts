@@ -5,16 +5,14 @@ import User from "../models/userModel";
 import AppError from "../utils/AppError";
 
 import { type CookieOptions } from "express";
+import { ObjectId } from "mongoose";
 
-const signingFunc = (payload: string | object): string | undefined => {
+const signingFunc = (payload :  string): string | undefined => {
   if (!process.env.JWT_SECRET) {
     return undefined;
   }
 
-  const tokenPayload =
-    typeof payload === "string" ? payload : payload.toString();
-
-  return jwt.sign(tokenPayload, process.env.JWT_SECRET);
+  return jwt.sign({payload}, process.env.JWT_SECRET);
 };
 
 //@Route            POST api/v1/auth/login
@@ -31,7 +29,8 @@ const signUp = catchAsync(
     const body: Body = req.body;
 
     const newUser = await User.create(body);
-    const token = signingFunc(newUser._id as string | object);
+    console.log(newUser._id)
+    const token = signingFunc(newUser._id as string);
 
     res.cookie("jwt", token, {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
@@ -63,13 +62,13 @@ const login = catchAsync(
     if (!user || !(await user.checkCorrectPassword(password, user.password))) {
       return next(new AppError("Incorrect email or password", 401));
     }
-
-    const token = signingFunc(user._id);
+    console.log(user._id)
+    const token = signingFunc(user._id as string);
 
     const cookie_options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-      secureee: true,
-      httpOnly: true,
+      secure: true,
+      httpOnly: false,
       sameSite: "none",
     } as CookieOptions;
 
