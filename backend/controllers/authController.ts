@@ -4,6 +4,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
 
+import { type CookieOptions } from "express";
+
 const signingFunc = (payload: string | object): string | undefined => {
   if (!process.env.JWT_SECRET) {
     return undefined;
@@ -32,10 +34,10 @@ const signUp = catchAsync(
     const token = signingFunc(newUser._id as string | object);
 
     res.cookie("jwt", token, {
-      expires : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-      secure : true,
-      httpOnly : false
-    })
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      secure: true,
+      httpOnly: false,
+    });
     res.status(201).json({
       message: "Registered Succesfully",
       newUser,
@@ -64,11 +66,14 @@ const login = catchAsync(
 
     const token = signingFunc(user._id);
 
-    res.cookie("jwt", token, {
-      expires : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-      secure : true,
-      httpOnly : false
-    })
+    const cookie_options = {
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      secureee: true,
+      httpOnly: true,
+      sameSite: "none",
+    } as CookieOptions;
+
+    res.cookie("jwt", token, cookie_options);
 
     res.status(200).json({
       message: "Logged in successfully",
@@ -91,7 +96,7 @@ const validateToken = catchAsync(
         message: "Please login first",
       });
     }
-    
+
     if (!process.env.JWT_SECRET) {
       return next(new AppError("JWT SECRET OR TOKEN NOT FOUND", 400));
     }
@@ -99,7 +104,7 @@ const validateToken = catchAsync(
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
       req.user = decoded;
-      next(); 
+      next();
     } catch (err) {
       return res.status(401).json({
         message: "Invalid token",
@@ -107,6 +112,5 @@ const validateToken = catchAsync(
     }
   }
 );
-
 
 export { login, signUp, validateToken };
