@@ -2,13 +2,13 @@ import { Button, TextField } from "@mui/material";
 import logo from "../../assets/logo.png";
 import { useMutation } from "react-query";
 import { useAxios } from "../../hooks/useAxios";
-import { FormEvent, useEffect } from "react";
+import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
 import { loginTypes } from "../../types/User";
 
 const Login = () => {
-  const {setUserData } = useUserContext();
+  const { setUserData } = useUserContext();
   const navigate = useNavigate();
 
   const loginFn = (loginData: loginTypes) => {
@@ -22,21 +22,6 @@ const Login = () => {
     },
   });
 
-  console.log(document.cookie)
-  useEffect(() => {
-    const autoLogin = async () => {
-      try {
-        // Send a POST request to validate the token
-        const response = await useAxios.post("/auth/validate-token");
-        console.log(response);
-      } catch (error) {
-        console.error("Error during auto-login:", error);
-      }
-    };
-  
-    // Call autoLogin function when the component mounts
-    autoLogin();
-  }, []);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const loginData: loginTypes = {

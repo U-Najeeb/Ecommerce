@@ -86,7 +86,6 @@ const validateToken = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
 
-    console.log(token)
     if (!token) {
       return res.status(401).json({
         message: "Please login first",
