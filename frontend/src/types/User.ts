@@ -1,4 +1,4 @@
-export interface User {
+export type User = {
   fName?: string;
   lName?: string;
   email?: string;
@@ -6,12 +6,12 @@ export interface User {
   address?: string;
 }
 
-export interface loginTypes {
+export type loginTypes = {
   email: string;
   password: string;
 }
 
-export interface SignUpTypes {
+export type SignUpTypes = {
   fName: string;
   lName: string;
   email: string;
