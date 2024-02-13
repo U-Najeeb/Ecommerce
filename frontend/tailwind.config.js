@@ -8,7 +8,8 @@ export default {
     extend: {
       colors : {
         "input-grey" : "#E3E3E3",
-        "text-grey" : "#848484"
+        "text-grey" : "#848484",
+        "primary" :  "#1D58EF"
       }
     },
   },
