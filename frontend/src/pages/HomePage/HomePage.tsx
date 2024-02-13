@@ -25,7 +25,7 @@ const HomePage = () => {
       {isLoading ? (
         <h1>Loading....</h1>
       ) : (
-        <ul>
+        <ul className=" pt-20">
           {filteredProducts.map((product: ProductsType) => (
             <li key={product._id}>{product.title}</li>
           ))}

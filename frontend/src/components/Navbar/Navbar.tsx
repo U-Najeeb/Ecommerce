@@ -2,7 +2,7 @@ import React, { FormEvent } from "react";
 import logo from "../../assets/logo.png";
 import searchIcon from "../../assets/searchIcon.png";
 import cartIcon from "../../assets/cart.png";
-import locationIcon from "../../assets/locationIcon.png"
+import locationIcon from "../../assets/locationIcon.png";
 
 type navbarPropTypes = {
   setSearchResult: React.Dispatch<React.SetStateAction<string>>;
@@ -20,17 +20,22 @@ const Navbar: React.FC<navbarPropTypes> = ({
 
   return (
     <>
-      <div className="navbar--container  flex pl-1 pr-1 bg-black">
+      <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0">
         <div className="navbar--wrapper flex w-full gap-2">
           <div className=" w-2/8 max-sm:w-9/12">
-            <img src={logo} alt="logo" className="w-full"/>
+            <img src={logo} alt="logo" className="w-full" />
           </div>
           <button className=" p-2 flex flex-col justify-center  hover:border-2 border-solid border-white">
             <div>
-              <p className=" text-input-grey text-xs font-medium">Delivering to Srinagar 190025</p>
+              <p className=" text-input-grey text-xs font-medium">
+                Delivering to Srinagar 190025
+              </p>
             </div>
             <div>
-              <p className="text-white text-base font-semibold flex justify-center items-center gap-1"><img src={locationIcon} className=" w-1/12 h-1/6"/>Change location</p>
+              <p className="text-white text-base font-semibold flex justify-center items-center gap-1">
+                <img src={locationIcon} className=" w-1/12 h-1/6" />
+                Change location
+              </p>
             </div>
           </button>
           <form className=" w-2/4  flex justify-center items-center">
@@ -81,8 +86,12 @@ const Navbar: React.FC<navbarPropTypes> = ({
             </div>
           </button>
           <button className=" p-2 flex flex-col justify-center hover:border-2 border-solid border-white">
-            <div className="">
-              <img src={cartIcon}/>
+            <div className="flex items-center gap-1">
+              <img src={cartIcon} />
+              <div className="bg-white w-5 h-5 rounded-xl flex justify-center items-center font-bold">
+                1
+              </div>
+              <p className="text-white text-sm">Cart</p>
             </div>
           </button>
         </div>
