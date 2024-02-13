@@ -18,7 +18,7 @@ const SignUp = () => {
     mutationFn: signupFn,
     onSuccess: (data) => {
       setUserData(data?.data);
-      navigate("/homepage");
+      navigate("/");
     },
   });
 
@@ -31,7 +31,7 @@ const SignUp = () => {
       }
     }
     autoLogin()
-  })
+  }, [navigate])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

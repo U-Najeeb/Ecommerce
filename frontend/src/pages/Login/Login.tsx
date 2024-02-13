@@ -18,7 +18,7 @@ const Login = () => {
     mutationFn: loginFn,
     onSuccess: (data) => {
       setUserData(data?.data?.user);
-      navigate("/homepage");
+      navigate("/");
     },
   });
 
@@ -32,7 +32,7 @@ const Login = () => {
       }
     }
     autoLogin()
-  })
+  }, [navigate])
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const loginData: loginTypes = {
