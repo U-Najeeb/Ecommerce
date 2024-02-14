@@ -1,6 +1,6 @@
 import { Box, Button, TextField } from "@mui/material";
 import logo from "../../assets/logo.png";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useAxios } from "../../hooks/useAxios";
 import { FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

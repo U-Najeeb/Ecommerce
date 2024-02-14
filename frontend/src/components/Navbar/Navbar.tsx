@@ -20,7 +20,7 @@ const Navbar: React.FC<navbarPropTypes> = ({
 
   return (
     <>
-      <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0">
+      <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0 z-50">
         <div className="navbar--wrapper flex w-full gap-2">
           <div className=" w-2/8 max-sm:w-9/12">
             <img src={logo} alt="logo" className="w-full" />
