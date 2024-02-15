@@ -98,21 +98,22 @@ const validateToken = catchAsync(
       return next(new AppError("JWT SECRET OR TOKEN NOT FOUND", 400));
     }
     try {
-      jwt.verify(token, process.env.JWT_SECRET, (err : Error | null) => {
-        if (err) {
-          return res.status(401).json({
-            message: "Invalid token",
-          });
-        } else {
-          return res.sendStatus(200);
-        }
-      });
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findOne({_id : (decoded as JwtPayload)?.payload})
+
+      res.status(200).json({
+        message : "User already logged in",
+        user
+      })
     } catch (err) {
+
       return res.status(401).json({
         message: "Invalid token",
       });
     }
   }
 );
+
+
 
 export { login, signUp, validateToken };

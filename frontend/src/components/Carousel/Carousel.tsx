@@ -28,9 +28,10 @@ const Carousel = () => {
           <img src={leftArrow} alt="Previous" className="w-4 h-6"   />
         </button>
         <div className="overflow-hidden relative w-full" style={{height : "90vh"}}>
+          {/* <div className=" absolute bg-gradient-to-t from-stone-800  to-black-500 w-full h-full z-10"></div> */}
           <div className="flex relative transition-transform ease-in-out duration-500" style={{ transform: `translateX(-${currentImage * 100}%)` }}>
             {carouselData.map((image, index) => (
-              <img key={index} src={image} className="h-full object-cover relative bottom-12" alt={`Slide ${index}`} style={{ width: "100%" }} />
+              <img key={index} src={image} className="h-full w-full object-cover relative bottom-12" alt={`Slide ${index}`}/>
             ))}
           </div>
         </div>

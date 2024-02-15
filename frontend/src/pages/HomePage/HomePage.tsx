@@ -6,7 +6,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Carousel from "../../components/Carousel/Carousel";
 
 const HomePage = () => {
-  const [products, setProducts] = useState<ProductsType[]>([]);
+  const [products, setProducts] = React.useState<ProductsType[]>([]);
   const [searchResults, setSearchResult] = useState("");
 
   const { isLoading, isError } = useQuery({
@@ -37,7 +37,7 @@ const HomePage = () => {
       ) : isError ? (
         <h1>Error fetching products.</h1>
       ) : (
-        <div className="pt-20">
+        <div style={{padding: " 4.8rem 0"}}>
         <Carousel/>
           <ul>
             {filteredProducts.map((product: ProductsType) => (

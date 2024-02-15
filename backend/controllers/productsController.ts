@@ -10,11 +10,11 @@ const createProduct = catchAsync(
       description: string;
       price: number;
       stock: number;
-      rating : number
+      rating: number;
       seller: ObjectId;
       productImage: string;
       category: ObjectId;
-      images : string[]
+      images: string[];
     }
     const body: ProductsBody = req.body;
     const product = await Product.create(body);
@@ -62,16 +62,16 @@ const getProductByID = catchAsync(
 const updateProduct = catchAsync(
   async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     interface updateProductBody {
-        productName?: string;
-        description?: string;
-        price?: number;
-        stock?: number;
-        rating ?: number
-        seller?: ObjectId;
-        productImage?: string;
-        category?: ObjectId;
-        images ?: string[]
-      }
+      productName?: string;
+      description?: string;
+      price?: number;
+      stock?: number;
+      rating?: number;
+      seller?: ObjectId;
+      productImage?: string;
+      category?: ObjectId;
+      images?: string[];
+    }
     const _id = req.params.id;
     const body: updateProductBody = req.body;
     const product = await Product.findByIdAndUpdate({ _id }, body, {
@@ -103,27 +103,46 @@ const deleteProduct = catchAsync(
 );
 
 const getProductsBySellerID = catchAsync(
-    async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-      const _id = req.params.id;
-      const products = await Product.find({ seller :  _id });
+  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+    const _id = req.params.id;
+    const products = await Product.find({ seller: _id });
 
-      if (!products){
-        res.status(404).json({
-            message : "No products found for this seller"
-        })
-      }
-      res.status(200).json({
-        message: "Products Found",
-        products
+    if (!products) {
+      res.status(404).json({
+        message: "No products found for this seller",
       });
     }
-  );
+    res.status(200).json({
+      message: "Products Found",
+      products,
+    });
+  }
+);
 
+const getProductsByCategory = catchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const category = req.params.category
+    const products = await Product.find({category})
+
+    if(!products){
+      return res.status(404).json({
+        message : "No products found with this category"
+      })
+    }
+
+    res.status(200).json({
+      message : "Products found",
+      count : products.length,
+      products
+    })
+  }
+);
 export {
   getAllProducts,
   getProductByID,
   updateProduct,
   createProduct,
   deleteProduct,
-  getProductsBySellerID
+  getProductsBySellerID,
+  getProductsByCategory,
 };
