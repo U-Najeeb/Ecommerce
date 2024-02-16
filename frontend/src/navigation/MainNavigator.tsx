@@ -22,18 +22,21 @@ const MainNavigator = () => {
 
   useEffect(() => {
     const autoLogin = async () => {
-      const response = await useAxios.post("/auth/validate-token", {});
-      if (userData) {
-        return;
-      } else {
-        if (response.status === 200) {
-          setUserData(response?.data?.user);
-          navigate("/");
+      try {
+        if (!userData) {
+          const response = await useAxios.post("/auth/validate-token", {});
+          if (response.status === 200) {
+            setUserData(response.data.user);
+          } else {
+            return;
+          }
         }
+      } catch (error) {
+        console.error("Auto-login failed:", error);
       }
     };
     autoLogin();
-  }, [navigate, setUserData]);
+  }, [navigate, setUserData, userData]);
 
   return (
     <>

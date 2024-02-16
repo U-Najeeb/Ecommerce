@@ -10,7 +10,6 @@ import searchIcon from "../../assets/searchIcon.png";
 import cartIcon from "../../assets/cart.png";
 import locationIcon from "../../assets/locationIcon.png";
 import { useNavigate } from "react-router-dom";
-import { User } from "../../types/User";
 import { useUserContext } from "../../context/userContext";
 
 type NavbarProps = {
@@ -46,7 +45,6 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
     setSearchResult((e.target as HTMLInputElement).value);
   };
 
-  console.log(userData)
   const handleLogin: MouseEventHandler = (e) => {
     e.preventDefault();
     if (!userData) {
@@ -56,8 +54,13 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
   };
 
   const handleDropdown = (e: ChangeEvent<HTMLSelectElement>) => {
-    navigate(`/products/${e.target.value}`);
+    navigate(`/products/${e.target.value}`)
   };
+
+  const handleLogoClick : MouseEventHandler = (e) => {
+    e.preventDefault()
+    navigate("/")
+  }
 
   const handleSetLocation: MouseEventHandler = (e) => {
     e.preventDefault();
@@ -83,11 +86,11 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
 
   return (
     <>
-      <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0 z-50 box-border">
+      <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0 z-50 box-border ">
         <div className="navbar--wrapper flex w-full relative">
-          <div className=" w-2/8 max-sm:w-9/12">
+          <button className=" w-2/8 max-sm:w-9/12" onClick = {handleLogoClick}>
             <img src={logo} alt="logo" className="w-full" />
-          </div>
+          </button>
           <button
             className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent  hover:border-2 hover:border-solid hover:border-white"
             onClick={handleSetLocation}
@@ -112,7 +115,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
                 className="h-10 px-2 outline-none rounded-l-md border-r-2 border-black bg-input-grey w-1/5"
                 onChange={handleDropdown}
               >
-                <option value={"All Categories"} disabled>
+                <option value={"All Categories"} disabled >
                   All Categories
                 </option>
                 <option value={"smartphones"}>Smartphones</option>

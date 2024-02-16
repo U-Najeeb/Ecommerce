@@ -8,5 +8,5 @@ export type ProductsType = {
     seller : string,
     stock : number,
     thumbnail : string,
-    images  : string[] | string
+    images: string[]
 }
