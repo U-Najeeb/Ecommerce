@@ -47,7 +47,7 @@ const SignUp = () => {
 
   return (
     <div className="flex justify-center h-screen items-center border-2 max-sm:p-1 overflow-y-auto ">
-      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-3 max-sm:w-full max-sm:gap-5 max-sm:mt-2">
+      <div className="border-solid border-2 border-input-grey flex justify-center flex-col gap-7  h-fit items-center rounded-xl p-8 max-sm:p-3 max-sm:w-full max-sm:gap-5 max-sm:mt-2 shadow-xl">
         <div className="w-fit max-sm:w-9/12 max-sm:flex max-sm:justify-center ">
           <img src={logo} alt="logo" />
         </div>

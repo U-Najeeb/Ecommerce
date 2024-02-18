@@ -75,7 +75,7 @@ const ProductsPage : React.FC<productsPageProps> = ({setAddedToCart}) => {
               className="products--container py-6 flex justify-center border-b-2"
               key={product._id}
             >
-              <div className="products--wrapper flex items-center gap-6 border-2 rounded-2xl p-5 w-3/4 transition-shadow duration-100 ease-in-out hover:shadow-xl bg-white">
+              <div className="products--wrapper flex items-center gap-6 border-2 rounded-2xl p-5 w-3/4 transition-shadow duration-300 ease-in-out hover:shadow-xl bg-white">
                 <div className="product--image rounded-lg h-fit w-72 border-2 p-2">
                   <img
                     src={

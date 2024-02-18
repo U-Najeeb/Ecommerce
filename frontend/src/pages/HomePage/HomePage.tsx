@@ -13,7 +13,7 @@ const HomePage = () => {
     queryFn: getProducts,
     enabled: true,
   });
-
+  
   async function getProducts() {
     try {
       const response = await useAxios.get("/products");
@@ -38,7 +38,16 @@ const HomePage = () => {
 
   return (
     <div>
-      <Navbar setSearchResult={setSearchResult} searchResults={searchResults} />
+      <Navbar
+        setSearchResult={setSearchResult}
+        searchResults={searchResults}
+        addedToCart={{
+          _id: "",
+          consumer: "",
+          productsInCart: [],
+          itemsInCart: 0,
+        }}
+      />
       {isLoading ? (
         <h1>Loading...</h1>
       ) : isError ? (
@@ -52,7 +61,7 @@ const HomePage = () => {
               ([category, categoryProducts]) => (
                 <div
                   key={category}
-                  className="flex flex-col gap-5 items-center h-full w-full border-2 rounded-lg transition-shadow duration-100 hover:shadow-lg"
+                  className="flex flex-col gap-5 items-center h-full w-full border-2 rounded-lg transition-shadow duration-300 ease-in-out  hover:shadow-lg"
                 >
                   <h2 className=" uppercase font-semibold text-2xl text-center bg-black w-full p-3 rounded-t-lg text-white">
                     {category}
@@ -66,7 +75,7 @@ const HomePage = () => {
                         <img
                           src={product?.thumbnail}
                           width={"40%"}
-                          className=" rounded-full aspect-square object-contain"
+                          className="rounded-full aspect-square object-contain transition-transform duration-300 ease-in-out hover:scale-110"
                         />
                         <h3>{product.title}</h3>
                       </div>
