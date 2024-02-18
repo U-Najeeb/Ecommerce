@@ -36,7 +36,6 @@ const HomePage = () => {
     {} as { [key: string]: ProductsType[] }
   );
 
-
   return (
     <div>
       <Navbar setSearchResult={setSearchResult} searchResults={searchResults} />
@@ -47,21 +46,35 @@ const HomePage = () => {
       ) : (
         <div style={{ padding: "4.8rem 0" }}>
           <Carousel />
-          {/* Render cards for each category */}
-          <div className="grid grid-cols-3">
-          {Object.entries(productsByCategory).map(([category, categoryProducts]) => (
-            <div key={category} className="border-2 flex flex-col gap-5 items-center h-full w-5/6">
-              <h2 className=" uppercase font-bold text-2xl text-center">{category}</h2>
-              <div className="card-container grid grid-cols-2 w-full place-items-center">
-                {categoryProducts.map((product) => (
-                  <div key={product._id} className="card w-full flex flex-col justify-center items-center">
-                    <img src={product?.thumbnail} width={"60rem"} className=" rounded-full"/>
-                    <h3>{product.title}</h3>
+
+          <div className="grid grid-cols-3 gap-8 pt-10 p-4">
+            {Object.entries(productsByCategory).map(
+              ([category, categoryProducts]) => (
+                <div
+                  key={category}
+                  className="flex flex-col gap-5 items-center h-full w-full border-2 rounded-lg transition-shadow duration-100 hover:shadow-lg"
+                >
+                  <h2 className=" uppercase font-semibold text-2xl text-center bg-black w-full p-3 rounded-t-lg text-white">
+                    {category}
+                  </h2>
+                  <div className="card-container grid grid-cols-2 w-full place-items-start p-2 gap-2">
+                    {categoryProducts.slice(0, 4).map((product) => (
+                      <div
+                        key={product._id}
+                        className="card w-full flex flex-col justify-center items-center h-full border-2 rounded-md p-2"
+                      >
+                        <img
+                          src={product?.thumbnail}
+                          width={"40%"}
+                          className=" rounded-full aspect-square object-contain"
+                        />
+                        <h3>{product.title}</h3>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
+                </div>
+              )
+            )}
           </div>
         </div>
       )}

@@ -3,8 +3,12 @@ import React, {useEffect} from "react";
 import { useParams } from "react-router-dom";
 import { useAxios } from "../../hooks/useAxios";
 import { ProductsType } from "../../types/Products";
+import { CartTypes } from "../../types/Cart";
 
-const ProductsPage = () => {
+type productsPageProps = {
+  setAddedToCart : React.Dispatch<React.SetStateAction<CartTypes>>
+}
+const ProductsPage : React.FC<productsPageProps> = ({setAddedToCart}) => {
   const { category } = useParams();
 
   const [products, setProducts] = React.useState<ProductsType[]>([]);
@@ -21,8 +25,8 @@ const ProductsPage = () => {
     queryFn: handleProductsWithCategory,
   });
 
-  const addToCart = (product: ProductsType) => {
-    return useAxios.post(
+  const addToCart = async (product: ProductsType) => {
+    const response =  await useAxios.post(
       "/cart/",
       {
         productsInCart: {
@@ -35,6 +39,14 @@ const ProductsPage = () => {
         },
       }
     );
+    console.log(response?.data?.cart)
+    setAddedToCart({
+      _id: response?.data?.cart?._id || "",
+      consumer: response?.data?.cart?.consumer || "",
+      productsInCart: response?.data?.cart?.productsInCart || [],
+      itemsInCart: response?.data?.cart?.itemsInCart || 0,
+    });
+    return response?.data?.cart
   };
   
 
@@ -49,7 +61,7 @@ const ProductsPage = () => {
   useEffect(() => {
     refetch();
   }, [category]);
-
+  
   return (
     <>
       {isLoading ? (

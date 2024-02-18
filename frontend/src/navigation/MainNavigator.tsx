@@ -5,14 +5,23 @@ import HomePage from "../pages/HomePage/HomePage";
 import ProductsPage from "../pages/Products/ProductsPage";
 import Profile from "../pages/Profile/Profile";
 import Navbar from "../components/Navbar/Navbar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAxios } from "../hooks/useAxios";
 import { useUserContext } from "../context/userContext";
+import CartPage from "../pages/Cart/CartPage";
+import AuthRoutes from "./AuthRoutes";
+import { CartTypes } from "../types/Cart";
 
 const MainNavigator = () => {
   const location = useLocation();
   const [searchResults, setSearchResult] = useState("");
   const { userData, setUserData } = useUserContext();
+  const [addedToCart, setAddedToCart] = React.useState<CartTypes>({
+    _id: "",
+    consumer: "",
+    productsInCart: [],
+    itemsInCart: 0,
+  });
   const navigate = useNavigate();
 
   const isLoginPage = location.pathname === "/login";
@@ -44,14 +53,18 @@ const MainNavigator = () => {
         <Navbar
           searchResults={searchResults}
           setSearchResult={setSearchResult}
+          addedToCart = {addedToCart}
         />
       )}
       <Routes>
         <Route path={"/login"} element={<Login />} />
         <Route path={"/signup"} element={<SignUp />} />
         <Route index element={<HomePage />} />
-        <Route path={"/products/:category"} element={<ProductsPage />} />
+        <Route path={"/products/:category"} element={<ProductsPage setAddedToCart={setAddedToCart}/>} />
         <Route path={"/profile"} element={<Profile />} />
+        <Route element={<AuthRoutes/>}>
+        <Route path={`/cart`} element ={<CartPage/>} />
+        </Route>
       </Routes>
     </>
   );

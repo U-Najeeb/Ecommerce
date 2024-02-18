@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   ChangeEvent,
   FormEvent,
-  MouseEventHandler
+  MouseEventHandler,
+  useEffect,
 } from "react";
 import logo from "../../assets/logo.png";
 import searchIcon from "../../assets/searchIcon.png";
@@ -11,36 +11,39 @@ import locationIcon from "../../assets/locationIcon.png";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
 import { useQuery } from "@tanstack/react-query";
-import { useAxios } from "../../hooks/useAxios";
 import { CartTypes } from "../../types/Cart";
+import { useAxios } from "../../hooks/useAxios";
 
 type NavbarProps = {
   setSearchResult: React.Dispatch<React.SetStateAction<string>>;
   searchResults: string;
+  addedToCart : CartTypes
 };
+
 type GeolocationPosition = {
   coords: {
     latitude: number;
     longitude: number;
   };
-}
+};
 
-const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
+const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults, addedToCart}) => {
   const navigate = useNavigate();
-  const {userData}  = useUserContext()
-  const [cartData , setCartData] = React.useState<CartTypes>({
-    _id : "",
-    consumer : "",
-    productsInCart : [],
-    itemsInCart : 0
-  })
-  const [currentLocation, setCurrentLocation] = React.useState<GeolocationPosition| null> ({
-    coords : {
-      latitude : 28.7041,
-      longitude : 77.1025
-    }
+  const { userData } = useUserContext();
+  const [cartData, setCartData] = React.useState<CartTypes>({
+    _id: "",
+    consumer: "",
+    productsInCart: [],
+    itemsInCart: 0,
   });
 
+  const [currentLocation, setCurrentLocation] =
+    React.useState<GeolocationPosition | null>({
+      coords: {
+        latitude: 28.7041,
+        longitude: 77.1025,
+      },
+    });
 
   const handleSearch = (e: FormEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -56,13 +59,13 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
   };
 
   const handleDropdown = (e: ChangeEvent<HTMLSelectElement>) => {
-    navigate(`/products/${e.target.value}`)
+    navigate(`/products/${e.target.value}`);
   };
 
-  const handleLogoClick : MouseEventHandler = (e) => {
-    e.preventDefault()
-    navigate("/")
-  }
+  const handleLogoClick: MouseEventHandler = (e) => {
+    e.preventDefault();
+    navigate("/");
+  };
 
   const handleSetLocation: MouseEventHandler = (e) => {
     e.preventDefault();
@@ -73,45 +76,37 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
 
   const fetchCartData = async () => {
     const response = await useAxios.get("/cart/getusercart", {
-      headers : {
-        Authorization : `Bearer ${document.cookie}`
-      }
-    })
-    setCartData(response?.data?.cart)
-    return response
-  }
-  const {data, refetch} = useQuery({
-    queryKey : ["cart-data", cartData],
-    queryFn : fetchCartData,
-  })
+      headers: {
+        Authorization: `Bearer ${document.cookie}`,
+      },
+    });
+    setCartData({
+      _id: response?.data?.cart._id || "",
+      consumer: response?.data?.cart.consumer || "",
+      productsInCart: response?.data?.cart.productsInCart || [],
+      itemsInCart: response?.data?.cart.itemsInCart || 0,
+    });
+    return response?.data?.cart;
+  };
 
-  React.useEffect(()=>{
-    refetch()
-  }, [refetch, data])
+  const { data, refetch } = useQuery({
+    queryKey: ["cart-data"],
+    queryFn: fetchCartData,
+  });
 
-    // useEffect(() => {
-    //   async function getLocation() {
-    //     const response = await fetch(
-    //       `https://api.geoapify.com/v1/geocode/reverse?lat=${Number(
-    //         currentLocation?.coords?.latitude
-    //       )}&lon=${Number(
-    //         currentLocation?.coords?.longitude
-    //       )}&apiKey=9722f72525dd454eba4f2affa527a193`
-    //     );
-    //     console.log(await response.json());
-    //   }
-    //   getLocation();
-    // }, [currentLocation]);
+  useEffect(() => {
+    refetch();
+  }, [addedToCart, data, refetch]);
 
   return (
     <>
       <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0 z-50 box-border ">
         <div className="navbar--wrapper flex w-full relative">
-          <button className=" w-2/8 max-sm:w-9/12" onClick = {handleLogoClick}>
+          <button className=" w-2/8 max-sm:w-9/12" onClick={handleLogoClick}>
             <img src={logo} alt="logo" className="w-full" />
           </button>
           <button
-            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent  hover:border-2 hover:border-solid hover:border-white"
+            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent rounded-md  hover:border-2 hover:border-solid hover:border-white"
             onClick={handleSetLocation}
           >
             <div>
@@ -134,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
                 className="h-10 px-2 outline-none rounded-l-md border-r-2 border-black bg-input-grey w-1/5"
                 onChange={handleDropdown}
               >
-                <option value={"All Categories"} disabled >
+                <option value={"All Categories"} disabled>
                   All Categories
                 </option>
                 <option value={"smartphones"}>Smartphones</option>
@@ -161,7 +156,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
             </div>
           </form>
           <button
-            className=" p-2 flex flex-col justify-center  border-2 border-solid border-transparent  hover:border-2 hover:border-solid hover:border-white"
+            className=" p-2 flex flex-col justify-center  border-2 border-solid border-transparent  rounded-md hover:border-2 hover:border-solid hover:border-white"
             onClick={handleLogin}
           >
             <div className="">
@@ -175,16 +170,21 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
               </p>
             </div>
           </button>
-          <button className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent  hover:border-2 hover:border-solid hover:border-white">
+          <button className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent rounded-md  hover:border-2 hover:border-solid hover:border-white">
             <div className="">
               <p className="text-white font-semibold">Orders</p>
             </div>
           </button>
-          <button className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent  hover:border-2 hover:border-solid hover:border-white">
+          <button
+            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent rounded-md  hover:border-2 hover:border-solid hover:border-white"
+            onClick={() => {
+              navigate("/cart");
+            }}
+          >
             <div className="flex items-center gap-1">
               <img src={cartIcon} />
               <div className="bg-white w-5 h-5 rounded-xl flex justify-center items-center font-bold">
-                {cartData?.itemsInCart ? cartData?.itemsInCart :   "0"}
+                {cartData?.itemsInCart ? cartData?.itemsInCart : "0"}
               </div>
               <p className="text-white text-sm">Cart</p>
             </div>
