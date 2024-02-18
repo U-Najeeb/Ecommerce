@@ -22,7 +22,7 @@ const MainNavigator = () => {
 
   useEffect(() => {
     const autoLogin = async () => {
-      try {
+      try { 
         if (!userData) {
           const response = await useAxios.post("/auth/validate-token", {});
           if (response.status === 200) {

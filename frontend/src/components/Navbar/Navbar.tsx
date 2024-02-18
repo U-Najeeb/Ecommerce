@@ -2,8 +2,7 @@
 import React, {
   ChangeEvent,
   FormEvent,
-  MouseEventHandler,
-  useEffect,
+  MouseEventHandler
 } from "react";
 import logo from "../../assets/logo.png";
 import searchIcon from "../../assets/searchIcon.png";
@@ -11,6 +10,9 @@ import cartIcon from "../../assets/cart.png";
 import locationIcon from "../../assets/locationIcon.png";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
+import { useQuery } from "@tanstack/react-query";
+import { useAxios } from "../../hooks/useAxios";
+import { CartTypes } from "../../types/Cart";
 
 type NavbarProps = {
   setSearchResult: React.Dispatch<React.SetStateAction<string>>;
@@ -26,6 +28,12 @@ type GeolocationPosition = {
 const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
   const navigate = useNavigate();
   const {userData}  = useUserContext()
+  const [cartData , setCartData] = React.useState<CartTypes>({
+    _id : "",
+    consumer : "",
+    productsInCart : [],
+    itemsInCart : 0
+  })
   const [currentLocation, setCurrentLocation] = React.useState<GeolocationPosition| null> ({
     coords : {
       latitude : 28.7041,
@@ -33,12 +41,6 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
     }
   });
 
-  // let user: User | undefined;
-  // if (document.cookie.split("=")[2]) {
-  //   user = JSON.parse(document.cookie.split("=")[2]);
-  // } else {
-  //   user = undefined;
-  // }
 
   const handleSearch = (e: FormEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -69,6 +71,23 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
     });
   };
 
+  const fetchCartData = async () => {
+    const response = await useAxios.get("/cart/getusercart", {
+      headers : {
+        Authorization : `Bearer ${document.cookie}`
+      }
+    })
+    setCartData(response?.data?.cart)
+    return response
+  }
+  const {data, refetch} = useQuery({
+    queryKey : ["cart-data", cartData],
+    queryFn : fetchCartData,
+  })
+
+  React.useEffect(()=>{
+    refetch()
+  }, [refetch, data])
 
     // useEffect(() => {
     //   async function getLocation() {
@@ -165,7 +184,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
             <div className="flex items-center gap-1">
               <img src={cartIcon} />
               <div className="bg-white w-5 h-5 rounded-xl flex justify-center items-center font-bold">
-                1
+                {cartData?.itemsInCart ? cartData?.itemsInCart :   "0"}
               </div>
               <p className="text-white text-sm">Cart</p>
             </div>

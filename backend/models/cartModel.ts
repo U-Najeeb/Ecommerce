@@ -1,4 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+
+const { Schema } = mongoose;
 
 const cartSchema = new Schema(
   {
@@ -7,18 +9,23 @@ const cartSchema = new Schema(
       ref: "User",
       required: true,
     },
-    productsInCart: {
-      type: [
-        {
+    productsInCart: [
+      {
+        productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
+          required: true,
         },
-      ],
-      default: [],
-    },
-    quantity: {
+        quantityOfProduct: {
+          type: Number,
+          default: 1,
+          required: true,
+        },
+      },
+    ],
+    itemsInCart: {
       type: Number,
-      default: 0,
+      default: 1,
     },
   },
   { timestamps: true }

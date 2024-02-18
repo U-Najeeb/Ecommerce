@@ -15,7 +15,7 @@ const protect = async (req: RequestType, res: Response, next: NextFunction) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split("jwt=")[1];
   }
 
   if (!token) {
@@ -27,8 +27,7 @@ const protect = async (req: RequestType, res: Response, next: NextFunction) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-
-  const currentUser = await User.findById(decoded._id);
+  const currentUser = await User.findById(decoded.payload);
 
   if (!currentUser) {
     return next(new AppError("This user no longer exists", 401));

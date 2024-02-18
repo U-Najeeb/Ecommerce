@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import React, {useEffect} from "react";
 import { useParams } from "react-router-dom";
 import { useAxios } from "../../hooks/useAxios";
 import { ProductsType } from "../../types/Products";
@@ -20,6 +20,31 @@ const ProductsPage = () => {
     queryKey: ["product", category],
     queryFn: handleProductsWithCategory,
   });
+
+  const addToCart = (product: ProductsType) => {
+    return useAxios.post(
+      "/cart/",
+      {
+        productsInCart: {
+          productId: product._id,
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${document.cookie}`,
+        },
+      }
+    );
+  };
+  
+
+  const { mutate } = useMutation({
+    mutationFn: addToCart,
+  });
+
+  function handleAddToCardClick(product: ProductsType) {
+    mutate(product);
+  }
 
   useEffect(() => {
     refetch();
@@ -59,7 +84,10 @@ const ProductsPage = () => {
                     </div>
                     <div className="flex gap-3">
                       <div className="cart--button-box">
-                        <button className="cart--button bg-primary text-white p-2 w-32 rounded-xl">
+                        <button
+                          className="cart--button bg-primary text-white p-2 w-32 rounded-xl"
+                          onClick={() => handleAddToCardClick(product)}
+                        >
                           Add a cart
                         </button>
                       </div>
