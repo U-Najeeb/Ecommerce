@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   ChangeEvent,
   FormEvent,
   MouseEventHandler,
-  useEffect,
 } from "react";
 import logo from "../../assets/logo.png";
 import searchIcon from "../../assets/searchIcon.png";
@@ -17,7 +17,6 @@ import { useAxios } from "../../hooks/useAxios";
 type NavbarProps = {
   setSearchResult: React.Dispatch<React.SetStateAction<string>>;
   searchResults: string;
-  addedToCart : CartTypes
 };
 
 type GeolocationPosition = {
@@ -27,7 +26,7 @@ type GeolocationPosition = {
   };
 };
 
-const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults, addedToCart}) => {
+const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults}) => {
   const navigate = useNavigate();
   const { userData } = useUserContext();
   const [cartData, setCartData] = React.useState<CartTypes>({
@@ -89,14 +88,15 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults, addedTo
     return response?.data?.cart;
   };
 
-  const { data, refetch } = useQuery({
+  useQuery({
     queryKey: ["cart-data"],
     queryFn: fetchCartData,
   });
 
-  useEffect(() => {
-    refetch();
-  }, [addedToCart, data, refetch]);
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [addedToCart, data, refetch]);
 
   return (
     <>

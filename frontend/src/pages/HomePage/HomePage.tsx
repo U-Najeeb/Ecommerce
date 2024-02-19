@@ -41,12 +41,6 @@ const HomePage = () => {
       <Navbar
         setSearchResult={setSearchResult}
         searchResults={searchResults}
-        addedToCart={{
-          _id: "",
-          consumer: "",
-          productsInCart: [],
-          itemsInCart: 0,
-        }}
       />
       {isLoading ? (
         <h1>Loading...</h1>
