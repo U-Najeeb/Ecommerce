@@ -9,14 +9,14 @@ interface RequestType extends Request {
   user?: JwtPayload;
 }
 const protect = async (req: RequestType, res: Response, next: NextFunction) => {
-  let token: string | undefined;
+  let token: string | undefined = req.cookies.jwt;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split("jwt=")[1];
-  }
+  // if (
+  //   req.headers.authorization &&
+  //   req.headers.authorization.startsWith("Bearer")
+  // ) {
+  //   token = req.headers.authorization.split("jwt=")[1];
+  // }
 
   if (!token) {
     return next(new AppError("Please log in first", 400));

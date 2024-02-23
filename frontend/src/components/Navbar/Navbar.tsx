@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, {
-  ChangeEvent,
-  FormEvent,
-  MouseEventHandler,
-} from "react";
+import React, { ChangeEvent, FormEvent, MouseEventHandler } from "react";
 import logo from "../../assets/logo.png";
 import searchIcon from "../../assets/searchIcon.png";
 import cartIcon from "../../assets/cart.png";
@@ -11,7 +7,6 @@ import locationIcon from "../../assets/locationIcon.png";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
 import { useQuery } from "@tanstack/react-query";
-import { CartTypes } from "../../types/Cart";
 import { useAxios } from "../../hooks/useAxios";
 
 type NavbarProps = {
@@ -26,15 +21,9 @@ type GeolocationPosition = {
   };
 };
 
-const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults}) => {
+const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
   const navigate = useNavigate();
   const { userData } = useUserContext();
-  const [cartData, setCartData] = React.useState<CartTypes>({
-    _id: "",
-    consumer: "",
-    productsInCart: [],
-    itemsInCart: 0,
-  });
 
   const [currentLocation, setCurrentLocation] =
     React.useState<GeolocationPosition | null>({
@@ -79,24 +68,13 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults}) => {
         Authorization: `Bearer ${document.cookie}`,
       },
     });
-    setCartData({
-      _id: response?.data?.cart._id || "",
-      consumer: response?.data?.cart.consumer || "",
-      productsInCart: response?.data?.cart.productsInCart || [],
-      itemsInCart: response?.data?.cart.itemsInCart || 0,
-    });
     return response?.data?.cart;
   };
 
-  useQuery({
+  const { data, status } = useQuery({
     queryKey: ["cart-data"],
     queryFn: fetchCartData,
   });
-
-
-  // useEffect(() => {
-  //   refetch();
-  // }, [addedToCart, data, refetch]);
 
   return (
     <>
@@ -164,7 +142,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults}) => {
                 {userData ? `Hello, ${userData?.fName}` : "Hello, Friend"}
               </p>
             </div>
-            <div className="">
+            <div>
               <p className="text-white text-sm font-semibold">
                 {userData ? "View Profile" : "Login here"}
               </p>
@@ -184,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults}) => {
             <div className="flex items-center gap-1">
               <img src={cartIcon} />
               <div className="bg-white w-5 h-5 rounded-xl flex justify-center items-center font-bold">
-                {cartData?.itemsInCart ? cartData?.itemsInCart : "0"}
+                {status === "success" ? data?.productsInCart.length : "0"}
               </div>
               <p className="text-white text-sm">Cart</p>
             </div>

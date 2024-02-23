@@ -1,17 +1,13 @@
-import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, {useEffect} from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAxios } from "../../hooks/useAxios";
 import { ProductsType } from "../../types/Products";
 
-
-
 const ProductsPage = () => {
   const { category } = useParams();
   const [products, setProducts] = React.useState<ProductsType[]>([]);
-  const queryClient = useQueryClient()
-
-
+  const queryClient = useQueryClient();
 
   const handleProductsWithCategory = async () => {
     const response = await useAxios.get(
@@ -27,12 +23,12 @@ const ProductsPage = () => {
   });
 
   const addToCart = async (product: ProductsType) => {
-    const response =  await useAxios.post(
+    const response = await useAxios.post(
       "/cart/",
       {
         productsInCart: {
           productId: product._id,
-        }
+        },
       },
       {
         headers: {
@@ -46,16 +42,15 @@ const ProductsPage = () => {
     //   productsInCart: response?.data?.cart?.productsInCart || [],
     //   itemsInCart: response?.data?.cart?.itemsInCart || 0,
     // });
-    return response?.data?.cart
+    return response?.data?.cart;
   };
-  
 
   const { mutate } = useMutation({
-    mutationKey : ["cart"],
+    mutationKey: ["cart"],
     mutationFn: addToCart,
-    onSuccess : () => {
+    onSuccess: () => {
       queryClient.invalidateQueries("cart" as never);
-    }
+    },
   });
 
   function handleAddToCardClick(product: ProductsType) {
@@ -65,7 +60,7 @@ const ProductsPage = () => {
   useEffect(() => {
     refetch();
   }, [category]);
-  
+
   return (
     <>
       {isLoading ? (

@@ -1,11 +1,17 @@
-import express from "express"
-import { createCart, getCartByUserID } from "../controllers/cartController"
-import protect from "../middlewares/authMiddleware"
+import express from "express";
+import {
+  createCart,
+  deleteProductFromCart,
+  getCartByUserID,
+} from "../controllers/cartController";
+import protect from "../middlewares/authMiddleware";
 
-const cartRouter = express.Router()
+const cartRouter = express.Router();
 
-cartRouter.route("/").post(protect,createCart)
+cartRouter.route("/").post(protect, createCart);
 
-cartRouter.route("/getusercart").get(protect, getCartByUserID)
+cartRouter.route("/getusercart").get(protect, getCartByUserID);
 
-export default cartRouter
+cartRouter.route("/deleteproduct/:pid").delete(protect, deleteProductFromCart);
+
+export default cartRouter;

@@ -27,7 +27,7 @@ const createCart = catchAsync(
       const productIndex = cart_already_present.productsInCart.findIndex(
         (product) => product.productId == req.body.productsInCart.productId
       );
-      
+
       if (productIndex !== -1) {
         cart_already_present.productsInCart[
           productIndex
@@ -41,7 +41,7 @@ const createCart = catchAsync(
         cart_already_present.productsInCart.push({
           productId: req.body.productsInCart.productId,
         });
-        cart_already_present.itemsInCart += 1
+        cart_already_present.itemsInCart += 1;
         await cart_already_present.save();
         return res.status(200).json({
           message: "Product added to cart",
@@ -60,6 +60,30 @@ const createCart = catchAsync(
   }
 );
 
+const deleteProductFromCart = catchAsync(
+  async (req: customRequest, res: Response, _next: NextFunction) => {
+    const consumer = req.user._id;
+    const { pid } = req.params;
+
+    const cart = await Cart.findOneAndUpdate(
+      { consumer },
+      {
+        $pull: { productsInCart: { productId: pid } },
+        $inc: { itemsInCart: -1 },
+      },
+      { new: true }
+    );
+
+    if (!cart) {
+      return res.status(404).json({ message: "Product not found in the cart" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Product deleted from cart successfully", cart });
+  }
+);
+
 const getCartByUserID = catchAsync(
   async (req: customRequest, res: Response, _next: NextFunction) => {
     const user = req.user;
@@ -68,11 +92,14 @@ const getCartByUserID = catchAsync(
         message: "Log in first",
       });
     }
-    const cart = await Cart.findOne({ consumer: user?._id });
+    let cart = await Cart.findOne({ consumer: user?._id }).populate(
+      "productsInCart.productId"
+    );
+
     res.status(200).json({
       message: "Cart Found",
       cart,
     });
   }
 );
-export { createCart, getCartByUserID };
+export { createCart, getCartByUserID, deleteProductFromCart };
