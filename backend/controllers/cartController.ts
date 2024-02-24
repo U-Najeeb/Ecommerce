@@ -4,6 +4,7 @@ import Cart from "../models/cartModel";
 import { ObjectId } from "mongoose";
 import { JwtPayload } from "jsonwebtoken";
 import { log } from "console";
+import AppError from "../utils/AppError";
 
 interface customRequest extends Request {
   user: JwtPayload;
@@ -66,7 +67,7 @@ const deleteProductFromCart = catchAsync(
     const { pid } = req.params;
 
     const cart = await Cart.findOneAndUpdate(
-      { consumer },
+      { consumer, "productsInCart.productId": pid },
       {
         $pull: { productsInCart: { productId: pid } },
         $inc: { itemsInCart: -1 },
@@ -102,4 +103,66 @@ const getCartByUserID = catchAsync(
     });
   }
 );
-export { createCart, getCartByUserID, deleteProductFromCart };
+
+const updateProduct = catchAsync(
+  async (req: customRequest, res: Response, next: NextFunction) => {
+    const consumer = req.user._id;
+    const { pid } = req.params;
+    const { operation } = req.body;
+
+    if (operation === "increment") {
+      const cart = await Cart.findOneAndUpdate(
+        { consumer, "productsInCart.productId": pid },
+        {
+          $inc: { "productsInCart.$.quantityOfProduct": 1 },
+        },
+        { new: true }
+      );
+
+      return res
+        .status(200)
+        .json({ message: "Product deleted from cart successfully", cart });
+    } else if (operation === "decrement") {
+      const cart = await Cart.findOne({
+        consumer,
+        "productsInCart.productId": pid,
+      });
+
+      if (!cart) {
+        return res.status(404).json({
+          message: "Product not found in cart or quantity is already zero",
+        });
+      }
+
+      const productIndex = cart.productsInCart.findIndex(
+        (product) => String(product.productId) === pid
+      );
+
+      if (
+        productIndex === -1 ||
+        cart.productsInCart[productIndex].quantityOfProduct === 0
+      ) {
+        // cart.productsInCart.splice(productIndex, productIndex);
+        // await cart.save();
+        return next(
+          new AppError(
+            "Product not found in cart or quantity is already zero",
+            404
+          )
+        );
+      }
+
+      cart.productsInCart[productIndex].quantityOfProduct--;
+
+      const updatedCart = await cart.save();
+      if (!updatedCart) {
+        return next(new AppError("Failed to update cart", 400));
+      }
+      return res.status(200).json({
+        message: "Product quantity decremented successfully",
+        cart: updatedCart,
+      });
+    }
+  }
+);
+export { createCart, getCartByUserID, deleteProductFromCart, updateProduct };

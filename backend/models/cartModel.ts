@@ -31,6 +31,9 @@ const cartSchema = new Schema(
   { timestamps: true }
 );
 
+cartSchema.index({ consumer: 1 });
+
+cartSchema.index({ "productsInCart.productId": 1 });
 const Cart = mongoose.model("Cart", cartSchema);
 
 export default Cart;

@@ -5,11 +5,7 @@ import { cartProduct } from "../../types/Cart";
 const CartPage = () => {
   const queryClient = useQueryClient();
   async function fetchCartPageData() {
-    const response = await useAxios.get("/cart/getusercart", {
-      headers: {
-        Authorization: `Bearer ${document.cookie}`,
-      },
-    });
+    const response = await useAxios.get("/cart/getusercart");
     return response?.data?.cart;
   }
 
@@ -22,15 +18,55 @@ const CartPage = () => {
     await useAxios.delete(`/cart/deleteproduct/${product}`);
   };
 
-  const { mutate } = useMutation({
-    mutationKey: ["delete-product"],
+  const { mutate: mutateDeleteProduct } = useMutation({
+    mutationKey: ["cart "],
     mutationFn: deleteProductFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries("cart" as never);
+    },
   });
 
-  queryClient.invalidateQueries("cart" as never);
-
   const handleDeleteProduct = (product: string) => {
-    mutate(product);
+    mutateDeleteProduct(product);
+  };
+
+  const increaseUpdateProductQuantity = async (product: cartProduct) => {
+    await useAxios.patch(`/cart/updateproduct/${product.productId._id}`, {
+      operation: "increment",
+    });
+    return;
+  };
+
+  const { mutate: increaseUpdateProduct } = useMutation({
+    mutationKey: ["cart"],
+    mutationFn: increaseUpdateProductQuantity,
+    onSuccess: () => {
+      queryClient.invalidateQueries("cart" as never);
+    },
+  });
+
+  const increaseProductQuantity = (product: cartProduct) => {
+    increaseUpdateProduct(product);
+  };
+
+  ////Increase Product Quantity
+  const decreaseUpdateProductQuantity = async (product: cartProduct) => {
+    await useAxios.patch(`/cart/updateproduct/${product.productId._id}`, {
+      operation: "decrement",
+    });
+    return;
+  };
+
+  const { mutate: decreaseUpdateProduct } = useMutation({
+    mutationKey: ["cart"],
+    mutationFn: decreaseUpdateProductQuantity,
+    onSuccess: () => {
+      queryClient.invalidateQueries("cart" as never);
+    },
+  });
+
+  const decreaseProductQuantity = (product: cartProduct) => {
+    decreaseUpdateProduct(product);
   };
 
   return (
@@ -45,7 +81,7 @@ const CartPage = () => {
                 key={product.productId._id}
               >
                 <span
-                  className="absolute right-2 top-2 font-bold text-xs"
+                  className="absolute right-2 top-2 font-bold text-xs cursor-pointer"
                   onClick={() => handleDeleteProduct(product.productId._id)}
                 >
                   ❌
@@ -82,6 +118,7 @@ const CartPage = () => {
                           <button
                             type="button"
                             className="px-3  font-semibold text-primary h-full border-r-2"
+                            onClick={() => decreaseProductQuantity(product)}
                           >
                             -
                           </button>
@@ -91,6 +128,7 @@ const CartPage = () => {
                           <button
                             type="button"
                             className="px-3 font-semibold text-primary h-full border-l-2"
+                            onClick={() => increaseProductQuantity(product)}
                           >
                             +
                           </button>
@@ -147,17 +185,41 @@ const CartPage = () => {
             <div className="checkbox---numbers p-2 flex gap-3 flex-col border-b-2">
               <div className="flex justify-between">
                 <span>Subtotal </span>
-                <span>${300}</span>
+                <span>
+                  $
+                  {data?.productsInCart.reduce(
+                    (acc: number, product: cartProduct) => {
+                      return (
+                        acc +
+                        (product?.productId?.price *
+                          product.quantityOfProduct || 0)
+                      );
+                    },
+                    0
+                  )}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>GST</span>
-                <span>${300}</span>
+                <span>10%</span>
               </div>
             </div>
 
             <div className="flex justify-between p-2 border-b-2">
               <span className=" text-lg font-semibold">Total</span>
-              <span className="text-lg font-semibold">${1000}</span>
+              <span className="text-lg font-semibold">
+                ${" "}
+                {data?.productsInCart
+                  .reduce((acc: number, product: cartProduct) => {
+                    const totalPriceWithoutGST =
+                      (product?.productId?.price || 0) *
+                      product.quantityOfProduct;
+                    const GSTAmount = totalPriceWithoutGST * (10 / 100);
+                    const totalPriceWithGST = totalPriceWithoutGST + GSTAmount;
+                    return acc + totalPriceWithGST;
+                  }, 0)
+                  .toFixed(2)}
+              </span>
             </div>
 
             <div className="flex justify-center">

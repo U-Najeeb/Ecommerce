@@ -15,18 +15,20 @@ const app = express(); // Creating a server
 connectToDb(); // Connecting to database
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
-app.use("/api/v1/cart", cartRouter)
+app.use("/api/v1/cart", cartRouter);
 
-app.use("*", (req: Request, _res: Response, next: NextFunction) => {
+app.all("*", (req: Request, _res: Response, next: NextFunction) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
