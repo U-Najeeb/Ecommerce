@@ -5,13 +5,12 @@ import User from "../models/userModel";
 import AppError from "../utils/AppError";
 import { type CookieOptions } from "express";
 
-
-const signingFunc = (payload :  string | object ): string | undefined => {
+const signingFunc = (payload: string | object): string | undefined => {
   if (!process.env.JWT_SECRET) {
     return undefined;
   }
 
-  return jwt.sign({payload}, process.env.JWT_SECRET);
+  return jwt.sign({ payload }, process.env.JWT_SECRET);
 };
 
 //@Route            POST api/v1/auth/login
@@ -28,7 +27,7 @@ const signUp = catchAsync(
     const body: Body = req.body;
 
     const newUser = await User.create(body);
-    console.log(newUser._id)
+    console.log(newUser._id);
     const token = signingFunc(newUser._id as string | object);
 
     res.cookie("jwt", token, {
@@ -88,25 +87,24 @@ interface CustomRequest extends Request {
 const validateToken = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
-    
+
     if (!token) {
-      return res.status(401).json({
-        message: "Please login first",
-      });
+      return next(new AppError("Please login first", 400));
     }
     if (!process.env.JWT_SECRET) {
       return next(new AppError("JWT SECRET OR TOKEN NOT FOUND", 400));
     }
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findOne({_id : (decoded as JwtPayload)?.payload})
+      const user = await User.findOne({
+        _id: (decoded as JwtPayload)?.payload,
+      });
 
       res.status(200).json({
-        message : "User already logged in",
-        user
-      })
+        message: "User already logged in",
+        user,
+      });
     } catch (err) {
-
       return res.status(401).json({
         message: "Invalid token",
       });
@@ -114,6 +112,14 @@ const validateToken = catchAsync(
   }
 );
 
+const logout = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.jwt;
+    if (token) {
+      res.clearCookie("jwt");
+      res.redirect("/auth/login");
+    }
+  }
+);
 
-
-export { login, signUp, validateToken };
+export { login, signUp, validateToken, logout };

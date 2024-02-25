@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
 import { useQuery } from "@tanstack/react-query";
 import { useAxios } from "../../hooks/useAxios";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Modal from "../Modal/Modal";
 
 type NavbarProps = {
   setSearchResult: React.Dispatch<React.SetStateAction<string>>;
@@ -24,6 +26,7 @@ type GeolocationPosition = {
 const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
   const navigate = useNavigate();
   const { userData } = useUserContext();
+  const [showModal, setShowModal] = React.useState(false);
 
   const [currentLocation, setCurrentLocation] =
     React.useState<GeolocationPosition | null>({
@@ -43,7 +46,8 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
     if (!userData) {
       return navigate("/login");
     }
-    navigate("/profile");
+
+    setShowModal(true);
   };
 
   const handleDropdown = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -78,6 +82,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
 
   return (
     <>
+      {showModal && <Modal setShowModal={setShowModal} showModal={showModal} />}
       <div className="navbar--container  flex p-1 bg-black fixed w-full top-0 left-0 z-50 box-border ">
         <div className="navbar--wrapper flex w-full relative">
           <button className=" w-2/8 max-sm:w-9/12" onClick={handleLogoClick}>
@@ -99,8 +104,8 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
               </p>
             </div>
           </button>
-          <form className=" w-2/4  flex justify-center items-center">
-            <div className=" flex justify-center items-center w-full ">
+          <form className=" w-2/4 flex justify-center items-center">
+            <div className=" flex justify-center items-center w-[100%] ">
               <select
                 name="categories"
                 defaultValue={"All Categories"}
@@ -134,17 +139,25 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
             </div>
           </form>
           <button
-            className=" p-2 flex flex-col justify-center  border-2 border-solid border-transparent  rounded-md hover:border-2 hover:border-solid hover:border-white"
+            className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent w-fit  rounded-md hover:border-2 hover:border-solid hover:border-white"
             onClick={handleLogin}
           >
-            <div className="">
-              <p className="text-white text-xs">
+            <div>
+              <p className="text-white text-[12.3px] font-semibold">
                 {userData ? `Hello, ${userData?.fName}` : "Hello, Friend"}
               </p>
             </div>
             <div>
-              <p className="text-white text-sm font-semibold">
-                {userData ? "View Profile" : "Login here"}
+              <p className="text-white font-semibold">
+                {userData ? (
+                  <ArrowDropDownIcon
+                    sx={{
+                      fontSize: "25px",
+                    }}
+                  />
+                ) : (
+                  "Login here"
+                )}
               </p>
             </div>
           </button>
