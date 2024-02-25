@@ -89,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
             <img src={logo} alt="logo" className="w-full" />
           </button>
           <button
-            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent rounded-md  hover:border-2 hover:border-solid hover:border-white"
+            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent rounded-md  transition-all duration-300 ease-in-out  hover:border-2 hover:border-solid hover:border-white"
             onClick={handleSetLocation}
           >
             <div>
@@ -139,7 +139,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
             </div>
           </form>
           <button
-            className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent w-fit  rounded-md hover:border-2 hover:border-solid hover:border-white"
+            className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent w-fit  rounded-md transition-all duration-300 ease-in-out  hover:border-2 hover:border-solid hover:border-white"
             onClick={handleLogin}
           >
             <div>
@@ -161,13 +161,13 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
               </p>
             </div>
           </button>
-          <button className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent rounded-md  hover:border-2 hover:border-solid hover:border-white">
+          <button className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent rounded-md transition-all duration-300 ease-in-out  hover:border-2 hover:border-solid hover:border-white">
             <div className="">
               <p className="text-white font-semibold">Orders</p>
             </div>
           </button>
           <button
-            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent rounded-md  hover:border-2 hover:border-solid hover:border-white"
+            className=" p-2 flex flex-col justify-center border-2 border-solid border-transparent rounded-md transition-all duration-300 ease-in-out   hover:border-2 hover:border-solid hover:border-white"
             onClick={() => {
               navigate("/cart");
             }}

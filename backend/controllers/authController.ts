@@ -117,7 +117,10 @@ const logout = catchAsync(
     const token = req.cookies.jwt;
     if (token) {
       res.clearCookie("jwt");
-      res.redirect("/auth/login");
+      // res.redirect("/auth/login");
+      res.status(200).json({
+        message: "Logged Out Successfully ",
+      });
     }
   }
 );

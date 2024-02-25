@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import logo from "../../assets/logo.png";
 import { useMutation } from "@tanstack/react-query";
 import { useAxios } from "../../hooks/useAxios";
-import { FormEvent} from "react";
+import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
 import { loginTypes } from "../../types/User";
@@ -56,6 +56,7 @@ const Login = () => {
             color="primary"
             focused
             required
+            autoComplete="true"
           />
           <TextField
             id="password"
@@ -72,6 +73,7 @@ const Login = () => {
             }}
             focused
             required
+            autoComplete="true"
           />
           <div className="w-fit">
             <Button

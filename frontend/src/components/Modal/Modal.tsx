@@ -11,7 +11,7 @@ type ModalProps = {
 const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
   const navigate = useNavigate();
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
+    if (e.target === e.currentTarget || e.target !== e.currentTarget) {
       setShowModal(false);
     }
   };
@@ -35,6 +35,11 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
     e.preventDefault();
     navigate("/profile");
   };
+
+  const handleSellerClick: MouseEventHandler = (e) => {
+    e.preventDefault();
+    navigate("/sell-on-amazon");
+  };
   return (
     <>
       {showModal && (
@@ -56,8 +61,11 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
               <div className="p-3 transition-all ease-in duration-300 hover:bg-gray-500 hover:bg-opacity-20">
                 <button>Help & Support</button>
               </div>
-              <div className="p-3 transition-all ease-in duration-300 hover:bg-gray-500 hover:bg-opacity-20">
-                <button>Be A Seller</button>
+              <div
+                className="p-3 transition-all ease-in duration-300 hover:bg-gray-500 hover:bg-opacity-20"
+                onClick={handleSellerClick}
+              >
+                <button>Become A Seller</button>
               </div>
               <div
                 className="p-3 pb-4 transition-all ease-in duration-300 hover:bg-gray-500 hover:bg-opacity-20 cursor-pointer"
