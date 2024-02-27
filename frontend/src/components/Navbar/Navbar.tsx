@@ -43,10 +43,6 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
 
   const handleLogin: MouseEventHandler = (e) => {
     e.preventDefault();
-    if (!userData) {
-      return navigate("/login");
-    }
-
     setShowModal(true);
   };
 
@@ -139,16 +135,16 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
             </div>
           </form>
           <button
-            className=" p-2 flex flex-col justify-center items-center border-2 border-solid border-transparent w-fit  rounded-md transition-all duration-300 ease-in-out  hover:border-2 hover:border-solid hover:border-white"
+            className=" p-1 flex justify-start items-center border-2 border-solid border-transparent w-fit  rounded-md transition-all duration-300 ease-in-out  hover:border-2 hover:border-solid hover:border-white"
             onClick={handleLogin}
           >
             <div>
-              <p className="text-white text-[12.3px] font-semibold">
+              <p className="text-white text-[12.3px] font-semibold ">
                 {userData ? `Hello, ${userData?.fName}` : "Hello, Friend"}
               </p>
             </div>
             <div>
-              <p className="text-white font-semibold">
+              <p className="text-white font-semibold ">
                 {userData ? (
                   <ArrowDropDownIcon
                     sx={{
@@ -156,7 +152,11 @@ const Navbar: React.FC<NavbarProps> = ({ setSearchResult, searchResults }) => {
                     }}
                   />
                 ) : (
-                  "Login here"
+                  <ArrowDropDownIcon
+                    sx={{
+                      fontSize: "25px",
+                    }}
+                  />
                 )}
               </p>
             </div>

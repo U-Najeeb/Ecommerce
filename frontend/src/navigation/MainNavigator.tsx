@@ -58,7 +58,7 @@ const MainNavigator = () => {
         <Route element={<AuthRoutes />}>
           <Route path={`/cart`} element={<CartPage />} />
         </Route>
-        <Route path={"/sell-on-amazon"} element={<SellerPage />} />
+        <Route path={"/sell-on-gocart"} element={<SellerPage />} />
       </Routes>
     </>
   );

@@ -164,17 +164,18 @@ const CartPage = () => {
               <span className="font-bold">
                 Next Working Day delivery (Order before 10pm)
               </span>
-              . Next Day Delivery is not available outside of Mainland UK.
+              . Next Day Delivery is not available outside of Srinagar Jammu and
+              Kashmir.
               <span className="font-bold">
                 {" "}
                 Delivery is Monday to Friday, excluding public holidays
               </span>
               . <br /> Any orders placed after 10pm Friday and over the weekend
               will not be dispatched until Monday, excluding Public Holidays.
-              <br /> FREE returns to any Smyths Toys Superstore near you.
-              <br /> Please note, some large items (such as bikes, doll houses,
-              playhouses) will be delivered in their original packing which may
-              display images or details of the contents.
+              <br /> FREE returns to any GoCart Superstore near you.
+              <br /> Please note, certain large items such as bikes, doll
+              houses, and playhouses may be delivered in their original
+              packaging, which could display images or details of the contents.
             </p>
           </div>
 

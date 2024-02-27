@@ -3,11 +3,24 @@ import LooksOneIcon from "@mui/icons-material/LooksOne";
 import LooksTwoRoundedIcon from "@mui/icons-material/LooksTwoRounded";
 import Looks3RoundedIcon from "@mui/icons-material/Looks3Rounded";
 import Looks4RoundedIcon from "@mui/icons-material/Looks4Rounded";
+import SellerForm from "../../components/SellerForm/SellerForm";
+import { MouseEventHandler, useRef } from "react";
 
 const SellerPage = () => {
+  const targetRef = useRef(null);
+
+  const handleRegister: MouseEventHandler = (e) => {
+    e.preventDefault();
+
+    if (targetRef.current) {
+      (targetRef.current as HTMLDivElement).scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  };
   return (
-    <div className="mt-20 flex justify-center border-2  p-10">
-      <div className="how-to-sell flex flex-col gap-10 rounded-xl border-2 border-blue-100  shadow-lg">
+    <div className="mt-20 flex flex-col justify-center item border-2  px-8 py-6">
+      <div className="how-to-sell flex flex-col gap-8 rounded-xl border-2 border-blue-100  shadow-lg px-10 ">
         <div className="p-2">
           <h1 className=" text-[3.5rem] text-center font-medium">
             How to sell on GoCart?
@@ -70,15 +83,19 @@ const SellerPage = () => {
           </div>
         </div>
 
-        <div className="flex gap-10 justify-center items-center p-4">
+        <div className="flex gap-10 justify-center items-center px-4 pt-4 pb-12">
           <span className=" text-gray-500">
             Become A Seller <ArrowForwardIcon />
           </span>
-          <button className=" relative bg-black text-white w-400 px-5 py-3 rounded-full transition-all duration-300 ease-in-out font-medium hover:bg-yellow-500  hover:text-black ">
+          <button
+            onClick={handleRegister}
+            className=" relative bg-black text-white w-400 px-5 py-3 rounded-full transition-all duration-300 ease-in-out font-medium hover:bg-yellow-500  hover:text-black "
+          >
             Register as a seller
           </button>
         </div>
       </div>
+      <SellerForm refrence={targetRef} />
     </div>
   );
 };
